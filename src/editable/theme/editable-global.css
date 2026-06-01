@@ -17,6 +17,15 @@ body {
   background-image: var(--slot4-body-gradient) !important;
 }
 
+.max-w-7xl,
+.max-w-\[var\(--editable-container\)\] {
+  max-width: var(--editable-container) !important;
+}
+
+.max-w-6xl {
+  max-width: min(1120px, var(--editable-container)) !important;
+}
+
 ::selection {
   background: color-mix(in oklab, var(--slot4-accent-fill) 22%, transparent);
   color: var(--slot4-page-text);
@@ -41,4 +50,12 @@ body {
 
 .article-content a {
   color: var(--slot4-accent-fill);
+}
+
+.article-content p {
+  margin: 0 0 1.25rem;
+}
+
+.article-content img {
+  border-radius: 1rem;
 }

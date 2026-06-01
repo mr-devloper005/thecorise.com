@@ -1,28 +1,45 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { BookOpen, MessageCircle, Search } from 'lucide-react'
 import { buildPageMetadata } from '@/lib/seo'
 import { EditableSiteShell } from '@/editable/shell/EditableSiteShell'
 import { EditableLocalLoginForm } from '@/editable/components/EditableLocalAuthForms'
-import { pagesContent } from '@/editable/content/pages.content'
+import { globalContent } from '@/editable/content/global.content'
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildPageMetadata({ path: '/login', title: 'Login', description: pagesContent.auth.login.metadataDescription })
+  return buildPageMetadata({ path: '/login', title: 'Login', description: 'Sign in to the local reader account for this article site.' })
 }
 
 export default function LoginPage() {
+  const benefits = [
+    { icon: BookOpen, title: 'Return to reading', body: 'Keep the site feeling personal while testing article browsing and comment flows.' },
+    { icon: MessageCircle, title: 'Reader identity', body: 'Use a local session so the navbar can show your name and logout action.' },
+    { icon: Search, title: 'Explore faster', body: 'Move back into the archive, search page, and featured article sections quickly.' },
+  ]
+
   return (
     <EditableSiteShell>
-      <main className="bg-[var(--editable-page-bg,#fff7ee)] text-[var(--editable-page-text,#2f1d16)]">
-        <section className="mx-auto grid min-h-[calc(100vh-12rem)] max-w-[var(--editable-container)] items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:px-8">
+      <main className="bg-[var(--slot4-page-bg)] text-[var(--slot4-page-text)]">
+        <section className="mx-auto grid min-h-[calc(100vh-9rem)] max-w-[var(--editable-container)] items-center gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_0.82fr] lg:px-8">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.28em] opacity-55">{pagesContent.auth.login.badge}</p>
-            <h1 className="mt-5 max-w-xl text-5xl font-black leading-[0.98] tracking-[-0.07em] sm:text-6xl">{pagesContent.auth.login.title}</h1>
-            <p className="mt-6 max-w-lg text-sm leading-8 opacity-70">{pagesContent.auth.login.description}</p>
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--slot4-accent)]">Reader access</p>
+            <h1 className="mt-5 max-w-2xl text-4xl font-black leading-tight tracking-normal sm:text-5xl">Welcome back to {globalContent.site.name}.</h1>
+            <p className="mt-5 max-w-xl text-base leading-8 text-[var(--slot4-muted-text)]">Sign in with your account to preview the article site as a returning reader. Your name will appear in the navbar with a logout button after login.</p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {benefits.map((item) => (
+                <div key={item.title} className="rounded-2xl border border-[var(--editable-border)] bg-white p-5 shadow-sm">
+                  <item.icon className="h-5 w-5 text-[var(--slot4-accent)]" />
+                  <h2 className="mt-4 text-base font-black">{item.title}</h2>
+                  <p className="mt-2 text-xs leading-6 text-[var(--slot4-muted-text)]">{item.body}</p>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="rounded-[2rem] border border-[var(--editable-border)] bg-white/80 p-6 shadow-[0_24px_70px_rgba(16,36,31,0.12)] backdrop-blur sm:p-8">
-            <h2 className="text-2xl font-black tracking-[-0.04em]">{pagesContent.auth.login.formTitle}</h2>
+          <div className="rounded-2xl border border-[var(--editable-border)] bg-white p-6 shadow-[0_24px_70px_rgba(16,20,38,0.10)] sm:p-8">
+            <h2 className="text-3xl font-black tracking-normal">Login</h2>
+            <p className="mt-2 text-sm leading-7 text-[var(--slot4-muted-text)]">Use the account you created.</p>
             <EditableLocalLoginForm />
-            <p className="mt-5 text-sm opacity-70">New here? <Link href="/signup" className="font-black underline-offset-4 hover:underline">{pagesContent.auth.login.createCta}</Link></p>
+            <p className="mt-5 text-sm text-[var(--slot4-muted-text)]">New here? <Link href="/signup" className="font-black text-[var(--slot4-accent)] underline-offset-4 hover:underline">Create a reader account</Link></p>
           </div>
         </section>
       </main>
