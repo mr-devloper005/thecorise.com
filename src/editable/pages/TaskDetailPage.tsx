@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, Bookmark, Building2, Camera, CheckCircle2, Download, ExternalLink, FileText, Globe2, Mail, MapPin, MessageCircle, Phone, Tag, UserRound } from 'lucide-react'
+import { ArrowLeft, Bookmark, Building2, Camera, CheckCircle2, Download, ExternalLink, FileText, Globe2, Mail, MapPin, MessageCircle, Phone, Search, Tag, UserRound } from 'lucide-react'
 import { buildPostMetadata, buildTaskMetadata } from '@/lib/seo'
 import { buildPostUrl, fetchArticleComments, fetchTaskPostBySlug, fetchTaskPosts } from '@/lib/task-data'
-import { getTaskConfig, SITE_CONFIG, type TaskKey } from '@/lib/site-config'
+import { getTaskConfig, type TaskKey } from '@/lib/site-config'
 import type { SitePost } from '@/lib/site-connector'
 import { EditableSiteShell } from '@/editable/shell/EditableSiteShell'
+import { globalContent } from '@/editable/content/global.content'
 import { getVisualPreset, visualSystem } from '@/editable/theme/visual-system'
 
 export const revalidate = 3
@@ -23,7 +24,7 @@ export async function EditableTaskDetailRoute({ task, params }: { task: TaskKey;
   const slug = resolved.slug || resolved.username || ''
   const post = await fetchTaskPostBySlug(task, slug)
   if (!post) notFound()
-  const related = (await fetchTaskPosts(task, 7)).filter((item) => item.slug !== post.slug).slice(0, 4)
+  const related = (await fetchTaskPosts(task, 8)).filter((item) => item.slug !== post.slug).slice(0, 5)
   const comments = task === 'article' ? await fetchArticleComments(post.slug, 50) : []
   return <TaskDetailView task={task} post={post} related={related} comments={comments} />
 }
@@ -54,43 +55,9 @@ const getBody = (post: SitePost) => {
   return asText(content.body) || asText(content.description) || asText(content.details) || post.summary || 'Details will appear here once available.'
 }
 
-const escapeHtml = (value: string) => value
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;')
-  .replace(/"/g, '&quot;')
-  .replace(/'/g, '&#39;')
-
-const safeUrl = (value: string) => /^https?:\/\//i.test(value) ? value : '#'
-
-const linkifyMarkdown = (value: string) => value
-  .replace(/\[([^\]]+)]\((https?:\/\/[^\s)]+)\)/gi, (_match, label, url) => `<a href="${safeUrl(url)}" target="_blank" rel="nofollow noopener noreferrer">${label}</a>`)
-
-const linkifyText = (value: string) => linkifyMarkdown(value)
-  .replace(/(^|[\s(>])((https?:\/\/)[^\s<)]+)/gi, (_match, prefix, url) => `${prefix}<a href="${safeUrl(url)}" target="_blank" rel="nofollow noopener noreferrer">${url}</a>`)
-
-const hardenLinks = (html: string) => html.replace(/<a\s+([^>]*href=["'][^"']+["'][^>]*)>/gi, (_match, attrs) => {
-  let next = String(attrs).replace(/\s+on\w+=("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-  if (!/\starget=/i.test(next)) next += ' target="_blank"'
-  if (!/\srel=/i.test(next)) next += ' rel="nofollow noopener noreferrer"'
-  return `<a ${next}>`
-})
-
-const sanitizeHtml = (html: string) => hardenLinks(html
-  .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-  .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-  .replace(/<(iframe|object|embed)[^>]*>[\s\S]*?<\/\1>/gi, '')
-  .replace(/\s+on\w+=("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-  .replace(/(href|src)=(['"])javascript:[\s\S]*?\2/gi, '$1="#"'))
-
 const formatPlainText = (raw: string) => {
-  const value = raw.trim()
-  if (!value) return ''
-  if (/<[a-z][\s\S]*>/i.test(value)) return sanitizeHtml(linkifyMarkdown(value))
-  return value
-    .split(/\n{2,}/)
-    .map((part) => `<p>${linkifyText(escapeHtml(part).replace(/\n/g, '<br />'))}</p>`)
-    .join('')
+  if (/<[a-z][\s\S]*>/i.test(raw)) return raw.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+  return raw.split(/\n{2,}/).map((part) => `<p>${part.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>`).join('')
 }
 
 const summaryText = (post: SitePost) => post.summary || asText(getContent(post).description) || asText(getContent(post).excerpt) || ''
@@ -134,18 +101,177 @@ function BackLink({ task }: { task: TaskKey }) {
 
 function ArticleDetail({ post, related, comments }: { post: SitePost; related: SitePost[]; comments: Array<{ id: string; name: string; comment: string; createdAt: string }> }) {
   const images = getImages(post)
+  const tags = Array.from(new Set([categoryOf(post, 'Article'), ...(post.tags || [])].filter(Boolean))).slice(0, 6)
   return (
-    <section className="mx-auto grid max-w-[var(--editable-container)] gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1fr)_350px] lg:px-8 lg:py-16">
-      <article className="min-w-0 rounded-[2.7rem] border border-[var(--editable-border)] bg-[var(--detail-surface)] p-5 shadow-[0_30px_90px_rgba(15,23,42,0.09)] sm:p-8 lg:p-12">
+    <section className="mx-auto max-w-[var(--editable-container)] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <div className="mx-auto max-w-4xl text-center">
         <BackLink task="article" />
         <p className="mt-8 text-xs font-black uppercase tracking-[0.28em] text-[var(--detail-accent)]">{categoryOf(post, 'Article')}</p>
-        <h1 className="mt-4 text-4xl font-black leading-[0.98] tracking-[-0.07em] sm:text-5xl lg:text-7xl">{post.title}</h1>
-        {images[0] ? <img src={images[0]} alt="" className="mt-8 max-h-[620px] w-full rounded-[2rem] object-cover" /> : null}
-        <BodyContent post={post} />
-        <EditableComments slug={post.slug} comments={comments} />
-      </article>
-      <RelatedPanel task="article" post={post} related={related} />
+        <h1 className="mx-auto mt-4 max-w-5xl text-4xl font-black leading-[1.05] tracking-[-0.04em] sm:text-5xl lg:text-6xl">{post.title}</h1>
+        <SocialShareRow title={post.title} />
+      </div>
+
+      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
+        <article className="min-w-0">
+          {images[0] ? (
+            <figure>
+              <img src={images[0]} alt="" className="aspect-[16/8.4] w-full bg-white object-cover" />
+            </figure>
+          ) : null}
+
+          <BodyContent post={post} editorial />
+
+          {images[1] ? <ArticleFigure image={images[1]} caption={categoryOf(post, 'Article')} align="right" /> : null}
+
+          {summaryText(post) ? (
+            <blockquote className="my-9 bg-white/70 px-8 py-7 text-2xl font-medium italic leading-10 tracking-[0] text-[var(--detail-text)] sm:px-10">
+              {summaryText(post)}
+            </blockquote>
+          ) : null}
+
+          {images[2] ? <ArticleFigure image={images[2]} caption={post.title} /> : null}
+
+          <ArticleChecklist />
+
+          {images[3] ? <ArticleFigure image={images[3]} caption={categoryOf(post, 'Article')} align="left" /> : null}
+
+          <EditableComments slug={post.slug} comments={comments} />
+        </article>
+
+        <ArticleSidebar related={related} tags={tags} />
+      </div>
     </section>
+  )
+}
+
+function SocialShareRow({ title }: { title: string }) {
+  const encodedTitle = encodeURIComponent(title)
+  const items = [
+    { label: 'f', href: `https://www.facebook.com/sharer/sharer.php?u=${encodedTitle}`, title: 'Facebook' },
+    { label: 'X', href: `https://twitter.com/intent/tweet?text=${encodedTitle}`, title: 'X' },
+    { label: 'in', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedTitle}`, title: 'LinkedIn' },
+    { label: 'P', href: `https://pinterest.com/pin/create/button/?description=${encodedTitle}`, title: 'Pinterest' },
+  ]
+  return (
+    <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+      {items.map((item) => (
+        <Link
+          key={item.title}
+          href={item.href}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Share on ${item.title}`}
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--editable-border)] bg-white text-sm font-black transition hover:bg-[var(--detail-text)] hover:text-[var(--detail-bg)]"
+        >
+          {item.label}
+        </Link>
+      ))}
+      <a
+        href={`mailto:?subject=${encodedTitle}`}
+        aria-label="Share by email"
+        className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--editable-border)] bg-white transition hover:bg-[var(--detail-text)] hover:text-[var(--detail-bg)]"
+      >
+        <Mail className="h-4 w-4" />
+      </a>
+      <Link
+        href="/article"
+        aria-label="Save article"
+        className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--editable-border)] bg-white transition hover:bg-[var(--detail-text)] hover:text-[var(--detail-bg)]"
+      >
+        <Bookmark className="h-4 w-4" />
+      </Link>
+    </div>
+  )
+}
+
+function ArticleSidebar({ related, tags }: { related: SitePost[]; tags: string[] }) {
+  return (
+    <aside className="space-y-10 lg:sticky lg:top-24">
+      <form action="/search" className="bg-white/70 p-10">
+        <div className="flex gap-0">
+          <input name="q" placeholder="Searching..." className="min-w-0 flex-1 bg-white px-5 py-4 text-sm outline-none" />
+          <button className="flex h-14 w-14 shrink-0 items-center justify-center bg-[var(--detail-accent)] text-white" aria-label="Search">
+            <Search className="h-6 w-6" />
+          </button>
+        </div>
+      </form>
+
+      {related.length ? (
+        <section className="bg-white/70 p-9">
+          <SidebarHeading>Recent Posts</SidebarHeading>
+          <div className="mt-7 grid gap-5">
+            {related.map((item) => <RecentArticleCard key={item.id || item.slug} post={item} />)}
+          </div>
+        </section>
+      ) : null}
+
+      {tags.length ? (
+        <section className="bg-white/70 p-9">
+          <SidebarHeading>Tags</SidebarHeading>
+          <div className="mt-7 flex flex-wrap gap-3">
+            {tags.map((tag) => (
+              <Link key={tag} href={`/article?category=${encodeURIComponent(tag.toLowerCase())}`} className="bg-white px-4 py-2 text-sm font-bold transition hover:bg-[var(--detail-text)] hover:text-[var(--detail-bg)]">
+                {tag} (1)
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : null}
+    </aside>
+  )
+}
+
+function SidebarHeading({ children }: { children: string }) {
+  return (
+    <div className="flex items-center gap-4">
+      <h2 className="shrink-0 text-2xl font-black tracking-[-0.03em]">{children}</h2>
+      <span className="h-px flex-1 bg-[var(--editable-border)]" />
+    </div>
+  )
+}
+
+function RecentArticleCard({ post }: { post: SitePost }) {
+  const image = getImages(post)[0]
+  return (
+    <Link href={buildPostUrl('article', post.slug)} className="group grid grid-cols-[90px_minmax(0,1fr)] gap-5">
+      <div className="h-[86px] bg-[var(--detail-bg)]">
+        {image ? <img src={image} alt="" className="h-full w-full object-cover" /> : <FileText className="m-auto h-full w-7 opacity-45" />}
+      </div>
+      <div className="min-w-0">
+        <h3 className="line-clamp-4 text-base font-black leading-snug tracking-[-0.02em] transition group-hover:text-[var(--detail-accent)]">{post.title}</h3>
+      </div>
+    </Link>
+  )
+}
+
+function ArticleFigure({ image, caption, align }: { image: string; caption: string; align?: 'left' | 'right' }) {
+  const alignClass = align === 'left' ? 'sm:float-left sm:mr-8' : align === 'right' ? 'sm:float-right sm:ml-8' : ''
+  return (
+    <figure className={`my-8 w-full sm:max-w-[330px] ${alignClass}`}>
+      <img src={image} alt="" className="aspect-[4/3] w-full object-cover" />
+      <figcaption className="mt-2 text-center text-xs font-medium opacity-65">{caption}</figcaption>
+    </figure>
+  )
+}
+
+function ArticleChecklist() {
+  const items = [
+    'Creative and modern design approach',
+    'Fully responsive across all devices',
+    'Optimized for speed and performance',
+    'Easy customization options',
+    'Clean and well-structured code',
+    'Professional team collaboration',
+  ]
+  return (
+    <ul className="clear-both my-9 grid gap-3">
+      {items.map((item) => (
+        <li key={item} className="flex items-center gap-3 text-lg">
+          <CheckCircle2 className="h-5 w-5 shrink-0 text-[var(--detail-accent)]" />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
   )
 }
 
@@ -162,8 +288,8 @@ function ListingDetail({ post, related }: { post: SitePost; related: SitePost[] 
       <BackLink task="listing" />
       <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
         <article className="rounded-[2.8rem] border border-[var(--editable-border)] bg-white p-6 shadow-[0_30px_90px_rgba(15,23,42,0.09)] sm:p-9">
-          <div className="grid gap-6 sm:grid-cols-[150px_1fr]">
-            <div className="flex h-36 w-36 items-center justify-center overflow-hidden rounded-[2rem] bg-[var(--detail-bg)] ring-1 ring-[var(--editable-border)]">
+          <div className="grid gap-6 sm:grid-cols-[192px_1fr]">
+            <div className="flex h-48 w-48 items-center justify-center overflow-hidden rounded-[2rem] bg-[var(--detail-bg)] ring-1 ring-[var(--editable-border)]">
               {logo ? <img src={logo} alt="" className="h-full w-full object-cover" /> : <Building2 className="h-14 w-14 opacity-40" />}
             </div>
             <div>
@@ -317,7 +443,15 @@ function ProfileDetail({ post, related }: { post: SitePost; related: SitePost[] 
   )
 }
 
-function BodyContent({ post, compact = false }: { post: SitePost; compact?: boolean }) {
+function BodyContent({ post, compact = false, editorial = false }: { post: SitePost; compact?: boolean; editorial?: boolean }) {
+  if (editorial) {
+    return (
+      <div
+        className="article-content mt-9 max-w-none text-[19px] leading-9 tracking-[0] opacity-95 [&>h2]:clear-both [&>h2]:mt-12 [&>h2]:text-4xl [&>h2]:font-black [&>h2]:leading-tight [&>h2]:tracking-[-0.03em] [&>p]:mb-6 [&>p:first-of-type:first-letter]:float-left [&>p:first-of-type:first-letter]:mr-5 [&>p:first-of-type:first-letter]:text-[8rem] [&>p:first-of-type:first-letter]:font-light [&>p:first-of-type:first-letter]:leading-[0.78]"
+        dangerouslySetInnerHTML={{ __html: formatPlainText(getBody(post)) }}
+      />
+    )
+  }
   return <div className={`article-content mt-8 max-w-none ${compact ? 'text-base leading-8' : 'text-lg leading-9'} opacity-80`} dangerouslySetInnerHTML={{ __html: formatPlainText(getBody(post)) }} />
 }
 
@@ -384,7 +518,7 @@ function RelatedPanel({ task, post, related, compact = false }: { task: TaskKey;
           <p className="text-xs font-black uppercase tracking-[0.22em] opacity-55">About this post</p>
           <div className="mt-4 grid gap-3 text-sm font-bold opacity-75">
             <p className="inline-flex items-center gap-2"><Tag className="h-4 w-4" /> Task: {taskConfig?.label || task}</p>
-            <p className="inline-flex items-center gap-2"><CheckCircle2 className="h-4 w-4" /> Site: {SITE_CONFIG.name}</p>
+            <p className="inline-flex items-center gap-2"><CheckCircle2 className="h-4 w-4" /> Site: {globalContent.site.name}</p>
             {post.publishedAt ? <p>Published: {new Date(post.publishedAt).toLocaleDateString()}</p> : null}
           </div>
         </div>
@@ -419,7 +553,7 @@ function RelatedCard({ task, post }: { task: TaskKey; post: SitePost }) {
 
 function EditableComments({ slug, comments }: { slug: string; comments: Array<{ id: string; name: string; comment: string; createdAt: string }> }) {
   return (
-    <section className="mt-10 rounded-[2rem] border border-[var(--editable-border)] bg-white/70 p-5">
+    <section className="clear-both mt-10 rounded-[2rem] border border-[var(--editable-border)] bg-white/70 p-5">
       <div className="flex items-center gap-2 text-lg font-black"><MessageCircle className="h-5 w-5" /> Comments</div>
       <div className="mt-5 grid gap-3">
         {comments.slice(0, 5).map((comment) => (

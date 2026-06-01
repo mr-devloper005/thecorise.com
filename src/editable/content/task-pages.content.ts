@@ -11,11 +11,11 @@ export type TaskPageVoice = {
 
 export const taskPageVoices = {
   article: {
-    eyebrow: 'Reading desk',
-    headline: 'Long-form articles with a calmer editorial rhythm.',
-    description: 'Use this page for essays, guides, explainers, and story-led posts. The layout should feel like a publication, not a directory.',
+    eyebrow: 'Article archive',
+    headline: 'Latest articles, essays, guides, and explainers in one polished archive.',
+    description: 'Browse the publication by topic, scan strong summaries, and open the reads that deserve more attention.',
     filterLabel: 'Choose article topic',
-    secondaryNote: 'Reading surfaces need space, hierarchy, and fewer distractions.',
+    secondaryNote: 'Good article pages need calm spacing, readable measure, and clear next steps.',
     chips: ['Editorial pacing', 'Topic filters', 'Long-read friendly'],
   },
   classified: {
