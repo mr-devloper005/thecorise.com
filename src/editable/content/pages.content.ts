@@ -81,6 +81,18 @@ export const pagesContent = {
     description: 'Send article ideas, contributor questions, correction notes, partnership requests, or reader feedback. Every message is shaped around making the publication stronger.',
     formTitle: 'Send the editorial desk a note',
   },
+  search: {
+    metadata: {
+      title: 'Search articles',
+      description: 'Search the article archive for stories, topics, and reader conversations.',
+    },
+  },
+  create: {
+    metadata: {
+      title: 'Create with the editorial workflow',
+      description: 'Start a new article, story, or pitch with guidance for the publication experience.',
+    },
+  },
   detailPages: {
     article: {
       relatedTitle: 'Related articles',
