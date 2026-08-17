@@ -14,6 +14,14 @@ export function getEditablePostImage(post?: SitePost | null) {
   return mediaUrl || contentImage || logo || '/placeholder.svg?height=900&width=1400'
 }
 
+export function toPlainText(raw: string) {
+  let text = raw
+  if (/&lt;\/?[a-z]/i.test(text)) {
+    text = text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0?39;/g, "'")
+  }
+  return text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
 export function getEditableExcerpt(post?: SitePost | null, limit = 150) {
   const content = post?.content && typeof post.content === 'object' ? post.content as Record<string, unknown> : {}
   const raw =
@@ -21,7 +29,7 @@ export function getEditableExcerpt(post?: SitePost | null, limit = 150) {
     (typeof content.summary === 'string' && content.summary) ||
     post?.summary ||
     ''
-  const clean = raw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+  const clean = toPlainText(raw)
   return clean.length > limit ? `${clean.slice(0, limit).trim()}...` : clean
 }
 

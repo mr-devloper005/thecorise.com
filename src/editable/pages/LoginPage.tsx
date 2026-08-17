@@ -27,7 +27,7 @@ export default function LoginPage() {
             <p className="mt-5 max-w-xl text-base leading-8 text-[var(--slot4-muted-text)]">Sign in with your account to preview the article site as a returning reader. Your name will appear in the navbar with a logout button after login.</p>
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               {benefits.map((item) => (
-                <div key={item.title} className="rounded-2xl border border-[var(--editable-border)] bg-white p-5 shadow-sm">
+                <div key={item.title} className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm">
                   <item.icon className="h-5 w-5 text-[var(--slot4-accent)]" />
                   <h2 className="mt-4 text-base font-black">{item.title}</h2>
                   <p className="mt-2 text-xs leading-6 text-[var(--slot4-muted-text)]">{item.body}</p>
@@ -35,7 +35,7 @@ export default function LoginPage() {
               ))}
             </div>
           </div>
-          <div className="rounded-2xl border border-[var(--editable-border)] bg-white p-6 shadow-[0_24px_70px_rgba(16,20,38,0.10)] sm:p-8">
+          <div className="rounded-2xl border border-black/[0.06] bg-white p-6 shadow-[0_24px_70px_rgba(16,20,38,0.10)] sm:p-8">
             <h2 className="text-3xl font-black tracking-normal">Login</h2>
             <p className="mt-2 text-sm leading-7 text-[var(--slot4-muted-text)]">Use the account you created.</p>
             <EditableLocalLoginForm />

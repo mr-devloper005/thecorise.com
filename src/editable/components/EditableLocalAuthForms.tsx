@@ -30,7 +30,7 @@ const saveSession = (user: Pick<LocalUser, 'name' | 'email'>) => {
   window.dispatchEvent(new Event('slot4-auth-change'))
 }
 
-const inputClass = 'h-12 rounded-2xl border border-[var(--editable-border)] bg-white/95 px-4 text-base font-bold text-[#101426] outline-none transition placeholder:text-[#667085] focus:border-[var(--slot4-accent-fill)] focus:bg-white'
+const inputClass = 'h-12 rounded-2xl border border-black/[0.06] bg-white/95 px-4 text-base font-bold text-[var(--slot4-dark-bg)] outline-none transition placeholder:text-[var(--slot4-soft-muted-text)] focus:border-[var(--slot4-accent-fill)] focus:bg-white'
 const buttonClass = 'inline-flex h-12 items-center justify-center rounded-2xl bg-[var(--slot4-accent-fill)] px-6 text-sm font-black uppercase tracking-[0.14em] text-white transition hover:-translate-y-0.5 disabled:opacity-60'
 
 export function EditableLocalLoginForm() {

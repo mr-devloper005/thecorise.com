@@ -45,7 +45,7 @@ export function EditableContactLeadForm() {
       </div>
       <label className="mt-4 grid gap-2 text-sm font-black opacity-75">
         Message
-        <textarea name="message" required rows={6} placeholder="Tell us about the article, correction, or publishing question..." className="rounded-2xl border border-[var(--editable-border)] bg-white px-4 py-3 text-base font-medium outline-none transition focus:border-[var(--slot4-accent-fill)]" />
+        <textarea name="message" required rows={6} placeholder="Tell us about the article, correction, or publishing question..." className="rounded-2xl border border-black/[0.06] bg-white px-4 py-3 text-base font-medium outline-none transition focus:border-[var(--slot4-accent-fill)]" />
       </label>
       <input name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
       {message ? (
@@ -66,7 +66,7 @@ function Field({ name, label, type = 'text', placeholder, required = false }: { 
   return (
     <label className="grid gap-2 text-sm font-black opacity-75">
       {label}
-      <input name={name} type={type} required={required} placeholder={placeholder} className="h-12 rounded-2xl border border-[var(--editable-border)] bg-white px-4 text-base font-medium outline-none transition focus:border-[var(--slot4-accent-fill)]" />
+      <input name={name} type={type} required={required} placeholder={placeholder} className="h-12 rounded-2xl border border-black/[0.06] bg-white px-4 text-base font-medium outline-none transition focus:border-[var(--slot4-accent-fill)]" />
     </label>
   )
 }

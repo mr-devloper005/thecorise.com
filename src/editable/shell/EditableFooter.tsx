@@ -1,28 +1,24 @@
 import Link from 'next/link'
-import type { CSSProperties } from 'react'
 import { ArrowUpRight, Mail, Search } from 'lucide-react'
 import { globalContent } from '@/editable/content/global.content'
 
 export function EditableFooter() {
-  const footerVars = { '--editable-footer-bg': 'var(--editable-page-bg, #fffaf3)', '--editable-footer-text': 'var(--editable-page-text, #241915)' } as CSSProperties
   const year = new Date().getFullYear()
   const siteName = globalContent.site.name
 
   return (
-    <footer style={footerVars} className="border-t border-[var(--editable-border)] bg-[var(--editable-footer-bg)] text-[var(--editable-footer-text)]">
+    <footer className="border-t border-black/[0.06] bg-[var(--slot4-page-bg)] text-[var(--slot4-page-text)]">
       <div className="mx-auto grid max-w-[var(--editable-container)] gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.25fr_0.8fr_0.8fr] lg:px-8">
         <div>
           <Link href="/" className="inline-flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-[var(--editable-border)] bg-white">
-              <img src="/favicon.png?v=20260413" alt={siteName} className="h-8 w-8 object-contain" />
-            </span>
+            <img src="/favicon.png?v=20260413" alt={siteName} className="h-16 w-16 object-contain" />
             <span>
               <span className="block text-lg font-black tracking-normal">{siteName}</span>
               <span className="block text-[10px] font-black uppercase tracking-[0.14em] opacity-50">{globalContent.footer.tagline}</span>
             </span>
           </Link>
           <p className="mt-4 max-w-md text-sm leading-7 opacity-70">{globalContent.footer.description}</p>
-          <form action="/search" className="mt-6 flex max-w-md rounded-full border border-[var(--editable-border)] bg-white p-2">
+          <form action="/search" className="mt-6 flex max-w-md rounded-full border border-black/[0.06] bg-white p-2">
             <Search className="ml-2 mt-2 h-4 w-4 opacity-50" />
             <input name="q" placeholder="Search the article archive" className="min-w-0 flex-1 bg-transparent px-3 text-sm font-semibold outline-none" />
             <button className="rounded-full bg-[var(--slot4-accent-fill)] px-4 py-2 text-sm font-black text-white">Search</button>
@@ -52,7 +48,7 @@ export function EditableFooter() {
           </div>
         </div>
       </div>
-      <div className="border-t border-[var(--editable-border)] px-4 py-5 text-center text-xs font-bold opacity-55">
+      <div className="border-t border-black/[0.06] px-4 py-5 text-center text-xs font-bold opacity-55">
         © {year} {siteName}. {globalContent.footer.bottomNote}
       </div>
     </footer>
