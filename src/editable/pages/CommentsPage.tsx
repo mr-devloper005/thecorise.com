@@ -94,7 +94,7 @@ export default function CommentsPage() {
     <EditableSiteShell>
       <main className="bg-[var(--slot4-page-bg)] text-[var(--slot4-page-text)]">
         <section className="mx-auto max-w-[var(--editable-container)] px-4 py-12 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-[var(--editable-border)] bg-white p-7 shadow-[0_24px_70px_rgba(16,20,38,0.08)] sm:p-9">
+          <div className="rounded-2xl border border-black/[0.06] bg-white p-7 shadow-[0_24px_70px_rgba(16,20,38,0.08)] sm:p-9">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-[var(--slot4-accent)]">
@@ -105,7 +105,7 @@ export default function CommentsPage() {
                   Review locally saved reader notes from article pages. This keeps conversation management aligned with the publication experience.
                 </p>
               </div>
-              <button type="button" className="inline-flex items-center gap-2 rounded-full border border-[var(--editable-border)] px-4 py-2 text-sm font-black" onClick={refreshComments}>
+              <button type="button" className="inline-flex items-center gap-2 rounded-full border border-black/[0.06] px-4 py-2 text-sm font-black" onClick={refreshComments}>
                 <RefreshCw className="h-4 w-4" /> Refresh
               </button>
             </div>
@@ -120,7 +120,7 @@ export default function CommentsPage() {
                     setPage(1)
                   }}
                   placeholder="Search comments..."
-                  className="h-11 w-full rounded-2xl border border-[var(--editable-border)] bg-[var(--slot4-gray)] pl-9 pr-3 text-sm outline-none focus:border-[var(--slot4-accent-fill)]"
+                  className="h-11 w-full rounded-2xl border border-black/[0.06] bg-[var(--slot4-gray)] pl-9 pr-3 text-sm outline-none focus:border-[var(--slot4-accent-fill)]"
                 />
               </div>
               <p className="text-sm font-semibold text-[var(--slot4-muted-text)]">
@@ -132,7 +132,7 @@ export default function CommentsPage() {
           {visibleComments.length ? (
             <section className="mt-8 grid gap-4">
               {visibleComments.map((item) => (
-                <article key={`${item.articleSlug}-${item.id}`} className="rounded-2xl border border-[var(--editable-border)] bg-white p-5 shadow-sm">
+                <article key={`${item.articleSlug}-${item.id}`} className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <p className="font-black">{item.name}</p>
@@ -150,18 +150,18 @@ export default function CommentsPage() {
               ))}
             </section>
           ) : (
-            <section className="mt-8 rounded-2xl border border-dashed border-[var(--editable-border)] bg-white/70 p-8 text-center">
+            <section className="mt-8 rounded-2xl border border-dashed border-black/[0.06] bg-white/70 p-8 text-center">
               <h2 className="text-xl font-black tracking-normal">No comments yet</h2>
               <p className="mt-2 text-sm text-[var(--slot4-muted-text)]">Add a comment on any article page and it will appear here.</p>
             </section>
           )}
 
           {filtered.length > COMMENTS_PER_PAGE ? (
-            <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--editable-border)] bg-white p-4 text-sm text-[var(--slot4-muted-text)]">
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-black/[0.06] bg-white p-4 text-sm text-[var(--slot4-muted-text)]">
               <span>Page {currentPage} of {totalPages}</span>
               <div className="flex gap-2">
-                <button type="button" className="rounded-full border border-[var(--editable-border)] px-4 py-2 font-black disabled:opacity-40" disabled={currentPage <= 1} onClick={() => setPage((value) => Math.max(1, value - 1))}>Previous</button>
-                <button type="button" className="rounded-full border border-[var(--editable-border)] px-4 py-2 font-black disabled:opacity-40" disabled={currentPage >= totalPages} onClick={() => setPage((value) => Math.min(totalPages, value + 1))}>Next</button>
+                <button type="button" className="rounded-full border border-black/[0.06] px-4 py-2 font-black disabled:opacity-40" disabled={currentPage <= 1} onClick={() => setPage((value) => Math.max(1, value - 1))}>Previous</button>
+                <button type="button" className="rounded-full border border-black/[0.06] px-4 py-2 font-black disabled:opacity-40" disabled={currentPage >= totalPages} onClick={() => setPage((value) => Math.min(totalPages, value + 1))}>Next</button>
               </div>
             </div>
           ) : null}

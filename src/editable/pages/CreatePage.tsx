@@ -31,7 +31,7 @@ export default function CreatePage() {
               </Link>
               <Link
                 href="/articles"
-                className="rounded-2xl bg-[var(--slot4-accent)] px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:bg-[var(--slot4-accent-hover)]"
+                className="rounded-2xl bg-[var(--slot4-accent)] px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:opacity-90"
               >
                 Browse article examples
               </Link>

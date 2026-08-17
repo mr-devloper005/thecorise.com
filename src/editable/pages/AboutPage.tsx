@@ -15,7 +15,7 @@ export default function AboutPage() {
       <main className="bg-[var(--slot4-page-bg)] px-4 py-12 text-[var(--slot4-page-text)] sm:px-6 lg:px-8">
         <section className="mx-auto max-w-[var(--editable-container)]">
           <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
-            <article className="rounded-2xl border border-[var(--editable-border)] bg-white p-7 shadow-[0_24px_70px_rgba(16,20,38,0.08)] sm:p-10 lg:p-12">
+            <article className="rounded-2xl border border-black/[0.06] bg-white p-7 shadow-[0_24px_70px_rgba(16,20,38,0.08)] sm:p-10 lg:p-12">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--slot4-accent)]">{pagesContent.about.badge}</p>
               <h1 className="mt-5 max-w-3xl text-4xl font-black leading-tight tracking-normal sm:text-5xl">About {globalContent.site.name}</h1>
               <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--slot4-muted-text)]">{pagesContent.about.description}</p>
@@ -37,7 +37,7 @@ export default function AboutPage() {
                 const icons = [BookOpen, PenLine, CheckCircle2]
                 const Icon = icons[index] || BookOpen
                 return (
-                  <div key={value.title} className="rounded-2xl border border-[var(--editable-border)] bg-white p-6 shadow-sm">
+                  <div key={value.title} className="rounded-2xl border border-black/[0.06] bg-white p-6 shadow-sm">
                     <Icon className="h-7 w-7 text-[var(--slot4-accent)]" />
                     <h2 className="mt-5 text-2xl font-black leading-tight tracking-normal">{value.title}</h2>
                     <p className="mt-3 text-sm leading-7 text-[var(--slot4-muted-text)]">{value.description}</p>
