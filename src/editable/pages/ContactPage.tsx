@@ -22,7 +22,7 @@ export default function ContactPage() {
             <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--slot4-muted-text)]">{pagesContent.contact.description}</p>
             <div className="mt-8 grid gap-4">
               {lanes.map((lane) => (
-                <div key={lane.title} className="rounded-2xl border border-[var(--editable-border)] bg-white p-5 shadow-sm">
+                <div key={lane.title} className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm">
                   <lane.icon className="h-6 w-6 text-[var(--slot4-accent)]" />
                   <h2 className="mt-4 text-xl font-black tracking-normal">{lane.title}</h2>
                   <p className="mt-2 text-sm leading-7 text-[var(--slot4-muted-text)]">{lane.body}</p>
@@ -31,7 +31,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[var(--editable-border)] bg-white p-5 shadow-[0_24px_70px_rgba(16,20,38,0.08)] sm:p-7">
+          <div className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-[0_24px_70px_rgba(16,20,38,0.08)] sm:p-7">
             <div className="mb-5 flex items-center gap-3">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--slot4-accent-fill)] text-white"><Mail className="h-5 w-5" /></span>
               <div>
